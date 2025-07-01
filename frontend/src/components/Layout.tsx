@@ -1,5 +1,5 @@
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
-import { Calendar, FileText, User, Activity, Heart, Home, LogOut, Video, Pill, MessageSquare, TrendingUp, Brain, UserCheck, Scan } from "lucide-react";
+import { Calendar, FileText, User, Activity, Heart, Home, LogOut, Video, Pill, MessageSquare, TrendingUp, Brain, UserCheck, Scan, Clock, BookOpen, Check, HeartPulse } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/contexts/AuthContext";
@@ -17,9 +17,13 @@ const Layout = () => {
     { name: 'Medications', href: '/medications', icon: Pill },
     { name: 'Messages', href: '/messages', icon: MessageSquare },
     { name: 'Health Tracking', href: '/health-tracking', icon: TrendingUp },
+    { name: 'Symptom Journal', href: '/symptom-journal', icon: BookOpen },
     { name: 'AI Health Coach', href: '/ai-coach', icon: Brain },
     { name: 'Health Avatar', href: '/health-avatar', icon: UserCheck },
     { name: 'Symptom Scanner', href: '/symptom-scanner', icon: Scan },
+    { name: 'Mindful Minutes', href: '/mindful-minutes', icon: Clock },
+    { name: 'Habits Tracker', href: '/habits-tracker', icon: Check },
+    { name: 'First Aid Quiz', href: '/first-aid-quiz', icon: HeartPulse },
     { name: 'Profile', href: '/profile', icon: User },
   ];
 
@@ -90,6 +94,7 @@ const Layout = () => {
                       )}
                       onClick={() => navigate(item.href)}
                     >
+                      <item.icon className="mr-2 h-4 w-4" />
                       {item.name}
                     </Button>
                   );

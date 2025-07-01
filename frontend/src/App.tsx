@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -17,6 +16,10 @@ import Profile from "./pages/Profile";
 import AIHealthCoach from "./pages/AIHealthCoach";
 import HealthAvatar from "./pages/HealthAvatar";
 import SymptomScanner from "./pages/SymptomScanner";
+import MindfulMinutes from "./pages/MindfulMinutes";
+import SymptomJournal from "./pages/SymptomJournal";
+import HabitsTracker from "./pages/HabitsTracker";
+import FirstAidQuiz from "./pages/FirstAidQuiz";
 import Layout from "./components/Layout";
 import ProtectedRoute from "./components/ProtectedRoute";
 import NotFound from "./pages/NotFound";
@@ -49,7 +52,27 @@ const App = () => (
               <Route path="ai-coach" element={<AIHealthCoach />} />
               <Route path="health-avatar" element={<HealthAvatar />} />
               <Route path="symptom-scanner" element={<SymptomScanner />} />
+              <Route path="symptom-journal" element={(
+                <ProtectedRoute>
+                  <SymptomJournal />
+                </ProtectedRoute>
+              )} />
+              <Route path="habits-tracker" element={
+                <ProtectedRoute>
+                  <HabitsTracker />
+                </ProtectedRoute>
+              } />
               <Route path="profile" element={<Profile />} />
+              <Route path="mindful-minutes" element={(
+                <ProtectedRoute>
+                  <MindfulMinutes />
+                </ProtectedRoute>
+              )} />
+              <Route path="first-aid-quiz" element={
+                <ProtectedRoute>
+                  <FirstAidQuiz />
+                </ProtectedRoute>
+              } />
             </Route>
             <Route path="*" element={<NotFound />} />
           </Routes>

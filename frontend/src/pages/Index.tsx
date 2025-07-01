@@ -4,6 +4,30 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
+import { motion } from "framer-motion";
+import { useInView } from "react-intersection-observer";
+
+const TestimonialCard = ({ testimonial, delay }: { testimonial: any, delay: number }) => {
+  const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.2 });
+  return (
+    <motion.div
+      ref={ref}
+      initial={{ opacity: 0, y: 40 }}
+      animate={inView ? { opacity: 1, y: 0 } : {}}
+      transition={{ duration: 0.6, delay, ease: 'easeOut' }}
+      className="bg-white/90 dark:bg-gray-900/90 rounded-2xl shadow-lg p-8 flex flex-col items-center text-center border border-blue-100 hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 animate-fade-in"
+    >
+      <img
+        src={testimonial.avatar}
+        alt={testimonial.name}
+        className="w-20 h-20 rounded-full border-4 border-blue-200 shadow mb-4 object-cover"
+      />
+      <p className="text-gray-700 dark:text-gray-200 text-lg mb-4 italic">“{testimonial.quote}”</p>
+      <div className="font-bold text-blue-700 dark:text-blue-300">{testimonial.name}</div>
+      <div className="text-sm text-gray-500 dark:text-gray-400">{testimonial.role}</div>
+    </motion.div>
+  );
+};
 
 const Index = () => {
   const navigate = useNavigate();
@@ -52,6 +76,33 @@ const Index = () => {
     { number: "200+", label: "Healthcare Providers" },
     { number: "99.9%", label: "Uptime" },
     { number: "24/7", label: "Support Available" }
+  ];
+
+  const testimonials = [
+    {
+      name: "Aarav Sharma",
+      avatar: "https://randomuser.me/api/portraits/men/32.jpg",
+      quote: "SehatSaathi made it so easy to keep track of my appointments and health records. The platform is intuitive and secure!",
+      role: "Patient, Delhi"
+    },
+    {
+      name: "Priya Verma",
+      avatar: "https://randomuser.me/api/portraits/women/44.jpg",
+      quote: "I love how I can access all my medical information in one place. The reminders and AI health coach are a game changer!",
+      role: "Patient, Mumbai"
+    },
+    {
+      name: "Dr. Rakesh Singh",
+      avatar: "https://randomuser.me/api/portraits/men/65.jpg",
+      quote: "As a doctor, SehatSaathi helps me connect with my patients and provide better care. Highly recommended for both patients and providers.",
+      role: "Cardiologist, Bangalore"
+    },
+    {
+      name: "Sunita Patel",
+      avatar: "https://randomuser.me/api/portraits/women/68.jpg",
+      quote: "The animations and design make using SehatSaathi a joy. I feel empowered and in control of my health!",
+      role: "Patient, Ahmedabad"
+    }
   ];
 
   const scrollToSection = (sectionId: string) => {
@@ -112,7 +163,13 @@ const Index = () => {
       </header>
 
       {/* Hero Section */}
-      <section className="container mx-auto px-4 py-20 animate-fade-in">
+      <motion.section
+        className="container mx-auto px-4 py-20"
+        initial={{ opacity: 0, y: 40 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, amount: 0.3 }}
+        transition={{ duration: 0.7, ease: 'easeOut' }}
+      >
         <div className="text-center max-w-4xl mx-auto">
           <div className="mb-8 flex justify-center">
             <img 
@@ -135,15 +192,15 @@ const Index = () => {
             <Button 
               onClick={() => navigate('/auth')}
               size="lg" 
-              className="bg-gradient-to-r from-blue-600 to-green-600 hover:from-blue-700 hover:to-green-700 text-lg px-8 py-3 transform hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-xl animate-pulse"
+              className="w-full sm:w-auto px-8 py-4 text-lg bg-gradient-to-r from-blue-600 to-green-600 hover:from-blue-700 hover:to-green-700"
             >
-              Access Portal
+              Get Started
             </Button>
             <Button 
               variant="outline" 
               size="lg" 
               onClick={() => setShowLearnMore(!showLearnMore)}
-              className="border-blue-200 text-blue-600 hover:bg-blue-50 text-lg px-8 py-3 transform hover:scale-105 transition-all duration-300"
+              className="w-full sm:w-auto px-8 py-4 text-lg border-blue-600 text-blue-600 hover:bg-blue-50"
             >
               Learn More
               <ChevronDown className={`w-4 h-4 ml-2 transition-transform duration-300 ${showLearnMore ? 'rotate-180' : ''}`} />
@@ -175,10 +232,16 @@ const Index = () => {
             </div>
           )}
         </div>
-      </section>
+      </motion.section>
 
       {/* Stats Section */}
-      <section className="bg-white/50 backdrop-blur-sm py-16 animate-fade-in">
+      <motion.section
+        className="bg-white/50 backdrop-blur-sm py-16"
+        initial={{ opacity: 0, y: 40 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, amount: 0.3 }}
+        transition={{ duration: 0.7, ease: 'easeOut' }}
+      >
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
             {stats.map((stat, index) => (
@@ -193,10 +256,17 @@ const Index = () => {
             ))}
           </div>
         </div>
-      </section>
+      </motion.section>
 
       {/* Features Section */}
-      <section id="features" className="container mx-auto px-4 py-20">
+      <motion.section
+        id="features"
+        className="container mx-auto px-4 py-20"
+        initial={{ opacity: 0, y: 40 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, amount: 0.3 }}
+        transition={{ duration: 0.7, ease: 'easeOut' }}
+      >
         <div className="text-center mb-16 animate-fade-in">
           <h2 className="text-4xl font-bold text-gray-900 mb-4">
             Everything You Need for Better Healthcare
@@ -232,7 +302,7 @@ const Index = () => {
                   {feature.description}
                 </CardDescription>
                 <Button 
-                  className="w-full bg-gradient-to-r from-blue-600 to-green-600 hover:from-blue-700 hover:to-green-700 transform hover:scale-105 transition-all duration-300 shadow-md hover:shadow-lg"
+                  className="w-full bg-gradient-to-r from-blue-600 to-green-600 hover:from-blue-700 hover:to-green-700 transform hover:scale-105 transition-all duration-300 shadow-md hover:shadow-lg px-4 py-2 text-sm sm:text-base"
                   onClick={(e) => {
                     e.stopPropagation();
                     navigate('/auth');
@@ -244,10 +314,39 @@ const Index = () => {
             </Card>
           ))}
         </div>
-      </section>
+      </motion.section>
+
+      {/* Testimonials Section */}
+      <motion.section
+        id="testimonials"
+        className="container mx-auto px-4 py-20"
+        initial={{ opacity: 0, y: 40 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, amount: 0.3 }}
+        transition={{ duration: 0.7, ease: 'easeOut' }}
+      >
+        <div className="text-center mb-16">
+          <h2 className="text-4xl font-bold text-gray-900 mb-4">What Our Users Say</h2>
+          <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+            Real stories from patients and providers who trust SehatSaathi
+          </p>
+        </div>
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+          {testimonials.map((testimonial, idx) => (
+            <TestimonialCard testimonial={testimonial} delay={idx * 0.1} key={testimonial.name} />
+          ))}
+        </div>
+      </motion.section>
 
       {/* About Section */}
-      <section id="about" className="bg-white/50 backdrop-blur-sm py-20 animate-fade-in">
+      <motion.section
+        id="about"
+        className="bg-white/50 backdrop-blur-sm py-20"
+        initial={{ opacity: 0, y: 40 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, amount: 0.3 }}
+        transition={{ duration: 0.7, ease: 'easeOut' }}
+      >
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto text-center">
             <h2 className="text-4xl font-bold text-gray-900 mb-6 animate-fade-in">About SehatSaathi</h2>
@@ -291,10 +390,16 @@ const Index = () => {
             </div>
           </div>
         </div>
-      </section>
+      </motion.section>
 
       {/* CTA Section */}
-      <section className="bg-gradient-to-r from-blue-600 to-green-600 py-20 animate-fade-in relative overflow-hidden">
+      <motion.section
+        className="bg-gradient-to-r from-blue-600 to-green-600 py-20 relative overflow-hidden"
+        initial={{ opacity: 0, y: 40 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, amount: 0.3 }}
+        transition={{ duration: 0.7, ease: 'easeOut' }}
+      >
         <div className="absolute inset-0 opacity-10">
           <div className="w-full h-full bg-repeat" style={{backgroundImage: "url('data:image/svg+xml;utf8,<svg width=\"60\" height=\"60\" viewBox=\"0 0 60 60\" xmlns=\"http://www.w3.org/2000/svg\"><g fill=\"none\" fill-rule=\"evenodd\"><g fill=\"%23ffffff\" fill-opacity=\"0.1\"><circle cx=\"30\" cy=\"30\" r=\"4\"/></g></g></svg>')"}}></div>
         </div>
@@ -314,10 +419,17 @@ const Index = () => {
             Get Started Today
           </Button>
         </div>
-      </section>
+      </motion.section>
 
       {/* Contact Section */}
-      <section id="contact" className="bg-gray-900 text-white py-20 animate-fade-in">
+      <motion.section
+        id="contact"
+        className="bg-gray-900 text-white py-20"
+        initial={{ opacity: 0, y: 40 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, amount: 0.3 }}
+        transition={{ duration: 0.7, ease: 'easeOut' }}
+      >
         <div className="container mx-auto px-4">
           <div className="text-center mb-12 animate-fade-in">
             <h2 className="text-4xl font-bold mb-4">Contact Us</h2>
@@ -373,7 +485,7 @@ const Index = () => {
             </div>
           </div>
         </div>
-      </section>
+      </motion.section>
 
       {/* Footer */}
       <footer className="bg-gray-900 border-t border-gray-800 text-white py-12 animate-fade-in">

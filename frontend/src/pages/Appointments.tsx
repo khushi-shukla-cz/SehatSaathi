@@ -158,19 +158,19 @@ const Appointments = () => {
       {/* Header */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Appointments</h1>
-          <p className="text-gray-600 mt-1">Manage your healthcare appointments</p>
+          <h1 className="text-4xl font-extrabold text-gray-900 dark:text-white tracking-tight">Appointments</h1>
+          <p className="text-gray-600 dark:text-gray-300 mt-1 text-lg">Manage your healthcare appointments</p>
         </div>
         <BookAppointmentForm onAppointmentBooked={fetchAppointments} />
       </div>
 
       {/* Tabs */}
-      <div className="flex space-x-1 bg-gray-100 p-1 rounded-lg w-fit">
+      <div className="flex space-x-1 bg-gray-100 dark:bg-gray-800 p-1 rounded-lg w-fit shadow-sm">
         <Button
           variant={selectedTab === "upcoming" ? "default" : "ghost"}
           size="sm"
           onClick={() => setSelectedTab("upcoming")}
-          className={selectedTab === "upcoming" ? "bg-white shadow-sm" : ""}
+          className={selectedTab === "upcoming" ? "bg-white dark:bg-gray-900 shadow-sm" : ""}
         >
           Upcoming ({upcomingAppointments.length})
         </Button>
@@ -178,7 +178,7 @@ const Appointments = () => {
           variant={selectedTab === "past" ? "default" : "ghost"}
           size="sm"
           onClick={() => setSelectedTab("past")}
-          className={selectedTab === "past" ? "bg-white shadow-sm" : ""}
+          className={selectedTab === "past" ? "bg-white dark:bg-gray-900 shadow-sm" : ""}
         >
           Past ({pastAppointments.length})
         </Button>
@@ -190,13 +190,13 @@ const Appointments = () => {
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
           <Input 
             placeholder="Search appointments..." 
-            className="pl-10" 
+            className="pl-10 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-lg"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
         </div>
         <Select value={filterSpecialty} onValueChange={setFilterSpecialty}>
-          <SelectTrigger className="w-[200px]">
+          <SelectTrigger className="w-[200px] bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-lg">
             <Filter className="w-4 h-4 mr-2" />
             <SelectValue placeholder="Filter by specialty" />
           </SelectTrigger>
@@ -215,31 +215,34 @@ const Appointments = () => {
       {selectedTab === "upcoming" && (
         <div className="space-y-4">
           {filteredUpcoming.length === 0 ? (
-            <Card>
-              <CardContent className="p-6 text-center text-gray-500">
-                <Calendar className="w-12 h-12 mx-auto mb-4 text-gray-400" />
+            <Card className="bg-white/90 dark:bg-gray-900/90 border-0">
+              <CardContent className="p-8 flex flex-col items-center text-gray-500 dark:text-gray-400">
+                <Calendar className="w-12 h-12 mb-4 text-gray-300 dark:text-gray-700" />
                 <p>No upcoming appointments found.</p>
               </CardContent>
             </Card>
           ) : (
             filteredUpcoming.map((appointment: any) => (
-              <Card key={appointment.id} className="hover:shadow-md transition-shadow">
-                <CardContent className="p-6">
-                  <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4">
-                    <div className="flex-1">
+              <Card key={appointment.id} className="hover:shadow-lg transition-shadow bg-white/90 dark:bg-gray-900/90 border-0">
+                <CardContent className="p-6 flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4">
+                  <div className="flex-1 flex items-center gap-4">
+                    <div className="rounded-full bg-blue-200 dark:bg-blue-900 w-12 h-12 flex items-center justify-center font-bold text-blue-700 dark:text-blue-300 text-lg">
+                      {appointment.healthcare_providers?.first_name?.[0] || "D"}
+                    </div>
+                    <div>
                       <div className="flex items-center gap-3 mb-2">
-                        <h3 className="text-lg font-semibold text-gray-900">
+                        <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
                           Dr. {appointment.healthcare_providers?.first_name} {appointment.healthcare_providers?.last_name}
                         </h3>
                         <Badge className={getStatusColor(appointment.status)}>
                           {appointment.status}
                         </Badge>
                       </div>
-                      <p className="text-gray-600 mb-2">{appointment.healthcare_providers?.specialty}</p>
+                      <p className="text-gray-600 dark:text-gray-400 mb-2">{appointment.healthcare_providers?.specialty}</p>
                       {appointment.reason && (
-                        <p className="text-sm text-gray-600 mb-2">{appointment.reason}</p>
+                        <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">{appointment.reason}</p>
                       )}
-                      <div className="flex flex-col sm:flex-row sm:items-center gap-4 text-sm text-gray-500">
+                      <div className="flex flex-col sm:flex-row sm:items-center gap-4 text-sm text-gray-500 dark:text-gray-400">
                         <div className="flex items-center">
                           <Calendar className="w-4 h-4 mr-1" />
                           {new Date(appointment.appointment_date).toLocaleDateString()}
@@ -260,27 +263,29 @@ const Appointments = () => {
                         )}
                       </div>
                     </div>
-                    <div className="flex gap-2">
-                      <AddAppointmentDataForm 
-                        appointmentId={appointment.id} 
-                        onDataAdded={fetchAppointments} 
-                      />
-                      <Button 
-                        variant="outline" 
-                        size="sm"
-                        onClick={() => handleReschedule(appointment)}
-                      >
-                        Reschedule
-                      </Button>
-                      <Button 
-                        variant="outline" 
-                        size="sm" 
-                        className="text-red-600 hover:text-red-700"
-                        onClick={() => handleCancelAppointment(appointment.id)}
-                      >
-                        Cancel
-                      </Button>
-                    </div>
+                  </div>
+                  <div className="flex gap-2">
+                    <AddAppointmentDataForm 
+                      appointmentId={appointment.id} 
+                      onDataAdded={fetchAppointments} 
+                    />
+                    <Button 
+                      variant="outline" 
+                      size="sm"
+                      onClick={() => handleReschedule(appointment)}
+                      title="Reschedule appointment"
+                    >
+                      Reschedule
+                    </Button>
+                    <Button 
+                      variant="outline" 
+                      size="sm" 
+                      className="text-red-600 hover:text-red-700"
+                      onClick={() => handleCancelAppointment(appointment.id)}
+                      title="Cancel appointment"
+                    >
+                      Cancel
+                    </Button>
                   </div>
                 </CardContent>
               </Card>
@@ -292,31 +297,34 @@ const Appointments = () => {
       {selectedTab === "past" && (
         <div className="space-y-4">
           {filteredPast.length === 0 ? (
-            <Card>
-              <CardContent className="p-6 text-center text-gray-500">
-                <Calendar className="w-12 h-12 mx-auto mb-4 text-gray-400" />
+            <Card className="bg-white/90 dark:bg-gray-900/90 border-0">
+              <CardContent className="p-8 flex flex-col items-center text-gray-500 dark:text-gray-400">
+                <Calendar className="w-12 h-12 mb-4 text-gray-300 dark:text-gray-700" />
                 <p>No past appointments found.</p>
               </CardContent>
             </Card>
           ) : (
             filteredPast.map((appointment: any) => (
-              <Card key={appointment.id} className="opacity-75">
-                <CardContent className="p-6">
-                  <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4">
-                    <div className="flex-1">
+              <Card key={appointment.id} className="opacity-75 hover:shadow-lg transition-shadow bg-white/90 dark:bg-gray-900/90 border-0">
+                <CardContent className="p-6 flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4">
+                  <div className="flex-1 flex items-center gap-4">
+                    <div className="rounded-full bg-gray-200 dark:bg-gray-800 w-12 h-12 flex items-center justify-center font-bold text-gray-700 dark:text-gray-300 text-lg">
+                      {appointment.healthcare_providers?.first_name?.[0] || "D"}
+                    </div>
+                    <div>
                       <div className="flex items-center gap-3 mb-2">
-                        <h3 className="text-lg font-semibold text-gray-900">
+                        <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
                           Dr. {appointment.healthcare_providers?.first_name} {appointment.healthcare_providers?.last_name}
                         </h3>
                         <Badge className={getStatusColor(appointment.status)}>
                           {appointment.status}
                         </Badge>
                       </div>
-                      <p className="text-gray-600 mb-2">{appointment.healthcare_providers?.specialty}</p>
+                      <p className="text-gray-600 dark:text-gray-400 mb-2">{appointment.healthcare_providers?.specialty}</p>
                       {appointment.reason && (
-                        <p className="text-sm text-gray-600 mb-2">{appointment.reason}</p>
+                        <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">{appointment.reason}</p>
                       )}
-                      <div className="flex flex-col sm:flex-row sm:items-center gap-4 text-sm text-gray-500">
+                      <div className="flex flex-col sm:flex-row sm:items-center gap-4 text-sm text-gray-500 dark:text-gray-400">
                         <div className="flex items-center">
                           <Calendar className="w-4 h-4 mr-1" />
                           {new Date(appointment.appointment_date).toLocaleDateString()}
@@ -331,18 +339,18 @@ const Appointments = () => {
                         </div>
                       </div>
                     </div>
-                    <div className="flex gap-2">
-                      <AddAppointmentDataForm 
-                        appointmentId={appointment.id} 
-                        onDataAdded={fetchAppointments} 
-                      />
-                      <Button variant="outline" size="sm">
-                        View Notes
-                      </Button>
-                      <Button variant="outline" size="sm">
-                        Book Again
-                      </Button>
-                    </div>
+                  </div>
+                  <div className="flex gap-2">
+                    <AddAppointmentDataForm 
+                      appointmentId={appointment.id} 
+                      onDataAdded={fetchAppointments} 
+                    />
+                    <Button variant="outline" size="sm" title="View notes">
+                      View Notes
+                    </Button>
+                    <Button variant="outline" size="sm" title="Book again">
+                      Book Again
+                    </Button>
                   </div>
                 </CardContent>
               </Card>

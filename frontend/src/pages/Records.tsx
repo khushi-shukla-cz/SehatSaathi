@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { FileText, Download, Eye, Search, Filter, Calendar, User } from "lucide-react";
+import { FileText, Download, Eye, Search, Filter, Calendar, User, Pill, Activity } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -124,12 +124,12 @@ const Records = () => {
   };
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-10 px-2 md:px-6 py-6 bg-gradient-to-br from-purple-50 via-white to-blue-50 dark:from-gray-900 dark:via-gray-950 dark:to-gray-900 min-h-screen transition-colors">
       {/* Header */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Medical Records</h1>
-          <p className="text-gray-600 mt-1">Your complete health information</p>
+          <h1 className="text-4xl font-extrabold text-gray-900 dark:text-white tracking-tight">Medical Records</h1>
+          <p className="text-gray-600 dark:text-gray-300 mt-1 text-lg">Your complete health information</p>
         </div>
         <DownloadRecordsButton />
       </div>
@@ -138,10 +138,10 @@ const Records = () => {
       <div className="flex flex-col sm:flex-row gap-4">
         <div className="relative flex-1">
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
-          <Input placeholder="Search records..." className="pl-10" />
+          <Input placeholder="Search records..." className="pl-10 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-lg" />
         </div>
         <Select>
-          <SelectTrigger className="w-[200px]">
+          <SelectTrigger className="w-[200px] bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-lg">
             <Filter className="w-4 h-4 mr-2" />
             <SelectValue placeholder="Filter by type" />
           </SelectTrigger>
@@ -157,29 +157,26 @@ const Records = () => {
 
       {/* Tabs */}
       <Tabs defaultValue="lab-results" className="space-y-6">
-        <TabsList className="grid w-full grid-cols-3 lg:w-fit lg:grid-cols-3">
-          <TabsTrigger value="lab-results">Lab Results</TabsTrigger>
-          <TabsTrigger value="medications">Medications</TabsTrigger>
-          <TabsTrigger value="vaccinations">Vaccinations</TabsTrigger>
+        <TabsList className="grid w-full grid-cols-3 lg:w-fit lg:grid-cols-3 bg-gray-100 dark:bg-gray-800 rounded-lg shadow-sm">
+          <TabsTrigger value="lab-results" className="flex items-center gap-2">
+            <FileText className="w-4 h-4 text-blue-600 dark:text-blue-400" /> Lab Results
+          </TabsTrigger>
+          <TabsTrigger value="medications" className="flex items-center gap-2">
+            <Pill className="w-4 h-4 text-green-600 dark:text-green-400" /> Medications
+          </TabsTrigger>
+          <TabsTrigger value="vaccinations" className="flex items-center gap-2">
+            <Activity className="w-4 h-4 text-orange-600 dark:text-orange-400" /> Vaccinations
+          </TabsTrigger>
         </TabsList>
 
         <TabsContent value="lab-results" className="space-y-4">
           {labResults.map((result) => (
-            <Card key={result.id} className="hover:shadow-md transition-shadow">
+            <Card key={result.id} className="hover:shadow-lg transition-shadow bg-blue-50/80 dark:bg-blue-950/40 border-0">
               <CardHeader>
                 <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-                  <div>
-                    <CardTitle className="text-lg">{result.test}</CardTitle>
-                    <CardDescription className="flex items-center gap-4 mt-2">
-                      <span className="flex items-center">
-                        <Calendar className="w-4 h-4 mr-1" />
-                        {result.date}
-                      </span>
-                      <span className="flex items-center">
-                        <User className="w-4 h-4 mr-1" />
-                        {result.doctor}
-                      </span>
-                    </CardDescription>
+                  <div className="flex items-center gap-2">
+                    <FileText className="w-6 h-6 text-blue-600 dark:text-blue-400" />
+                    <CardTitle className="text-lg text-gray-900 dark:text-white">{result.test}</CardTitle>
                   </div>
                   <div className="flex items-center gap-2">
                     <Badge className={getStatusColor(result.status)}>
@@ -188,22 +185,32 @@ const Records = () => {
                     <Badge variant="outline">{result.category}</Badge>
                   </div>
                 </div>
+                <CardDescription className="flex items-center gap-4 mt-2">
+                  <span className="flex items-center">
+                    <Calendar className="w-4 h-4 mr-1" />
+                    {result.date}
+                  </span>
+                  <span className="flex items-center">
+                    <User className="w-4 h-4 mr-1" />
+                    {result.doctor}
+                  </span>
+                </CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                   {Object.entries(result.results).map(([key, value]) => (
-                    <div key={key} className="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
-                      <span className="font-medium text-gray-700">{key}:</span>
-                      <span className="text-gray-900">{value}</span>
+                    <div key={key} className="flex justify-between items-center p-3 bg-white dark:bg-gray-900 rounded-lg">
+                      <span className="font-medium text-gray-700 dark:text-gray-300">{key}:</span>
+                      <span className="text-gray-900 dark:text-white">{value}</span>
                     </div>
                   ))}
                 </div>
                 <div className="flex gap-2">
-                  <Button variant="outline" size="sm">
+                  <Button variant="outline" size="sm" title="View details">
                     <Eye className="w-4 h-4 mr-2" />
                     View Details
                   </Button>
-                  <Button variant="outline" size="sm">
+                  <Button variant="outline" size="sm" title="Download PDF">
                     <Download className="w-4 h-4 mr-2" />
                     Download PDF
                   </Button>
@@ -215,12 +222,13 @@ const Records = () => {
 
         <TabsContent value="medications" className="space-y-4">
           {medications.map((medication, index) => (
-            <Card key={index} className="hover:shadow-md transition-shadow">
-              <CardContent className="p-6">
-                <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4">
-                  <div className="flex-1">
+            <Card key={index} className="hover:shadow-lg transition-shadow bg-green-50/80 dark:bg-green-950/40 border-0">
+              <CardContent className="p-6 flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4">
+                <div className="flex-1 flex items-center gap-4">
+                  <Pill className="w-8 h-8 text-green-600 dark:text-green-400" />
+                  <div>
                     <div className="flex items-center gap-3 mb-2">
-                      <h3 className="text-lg font-semibold text-gray-900">
+                      <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
                         {medication.name}
                       </h3>
                       <Badge className={getStatusColor(medication.status)}>
@@ -229,35 +237,35 @@ const Records = () => {
                     </div>
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 text-sm">
                       <div>
-                        <span className="font-medium text-gray-700">Dosage:</span>
-                        <p className="text-gray-900">{medication.dosage}</p>
+                        <span className="font-medium text-gray-700 dark:text-gray-300">Dosage:</span>
+                        <p className="text-gray-900 dark:text-white">{medication.dosage}</p>
                       </div>
                       <div>
-                        <span className="font-medium text-gray-700">Frequency:</span>
-                        <p className="text-gray-900">{medication.frequency}</p>
+                        <span className="font-medium text-gray-700 dark:text-gray-300">Frequency:</span>
+                        <p className="text-gray-900 dark:text-white">{medication.frequency}</p>
                       </div>
                       <div>
-                        <span className="font-medium text-gray-700">Prescribed by:</span>
-                        <p className="text-gray-900">{medication.prescribedBy}</p>
+                        <span className="font-medium text-gray-700 dark:text-gray-300">Prescribed by:</span>
+                        <p className="text-gray-900 dark:text-white">{medication.prescribedBy}</p>
                       </div>
                       <div>
-                        <span className="font-medium text-gray-700">Date Started:</span>
-                        <p className="text-gray-900">{medication.dateStarted}</p>
+                        <span className="font-medium text-gray-700 dark:text-gray-300">Date Started:</span>
+                        <p className="text-gray-900 dark:text-white">{medication.dateStarted}</p>
                       </div>
                       <div className="sm:col-span-2">
-                        <span className="font-medium text-gray-700">Indication:</span>
-                        <p className="text-gray-900">{medication.indication}</p>
+                        <span className="font-medium text-gray-700 dark:text-gray-300">Indication:</span>
+                        <p className="text-gray-900 dark:text-white">{medication.indication}</p>
                       </div>
                     </div>
                   </div>
-                  <div className="flex gap-2">
-                    <Button variant="outline" size="sm">
-                      Refill Request
-                    </Button>
-                    <Button variant="outline" size="sm">
-                      View Details
-                    </Button>
-                  </div>
+                </div>
+                <div className="flex gap-2">
+                  <Button variant="outline" size="sm" title="Request refill">
+                    Refill Request
+                  </Button>
+                  <Button variant="outline" size="sm" title="View details">
+                    View Details
+                  </Button>
                 </div>
               </CardContent>
             </Card>
@@ -266,38 +274,39 @@ const Records = () => {
 
         <TabsContent value="vaccinations" className="space-y-4">
           {vaccinations.map((vaccination, index) => (
-            <Card key={index} className="hover:shadow-md transition-shadow">
-              <CardContent className="p-6">
-                <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4">
-                  <div className="flex-1">
-                    <h3 className="text-lg font-semibold text-gray-900 mb-3">
+            <Card key={index} className="hover:shadow-lg transition-shadow bg-orange-50/80 dark:bg-orange-950/40 border-0">
+              <CardContent className="p-6 flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4">
+                <div className="flex-1 flex items-center gap-4">
+                  <Activity className="w-8 h-8 text-orange-600 dark:text-orange-400" />
+                  <div>
+                    <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">
                       {vaccination.vaccine}
                     </h3>
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 text-sm">
                       <div>
-                        <span className="font-medium text-gray-700">Date Given:</span>
-                        <p className="text-gray-900">{vaccination.date}</p>
+                        <span className="font-medium text-gray-700 dark:text-gray-300">Date Given:</span>
+                        <p className="text-gray-900 dark:text-white">{vaccination.date}</p>
                       </div>
                       <div>
-                        <span className="font-medium text-gray-700">Provider:</span>
-                        <p className="text-gray-900">{vaccination.provider}</p>
+                        <span className="font-medium text-gray-700 dark:text-gray-300">Provider:</span>
+                        <p className="text-gray-900 dark:text-white">{vaccination.provider}</p>
                       </div>
                       <div>
-                        <span className="font-medium text-gray-700">Lot Number:</span>
-                        <p className="text-gray-900">{vaccination.lotNumber}</p>
+                        <span className="font-medium text-gray-700 dark:text-gray-300">Lot Number:</span>
+                        <p className="text-gray-900 dark:text-white">{vaccination.lotNumber}</p>
                       </div>
                       <div>
-                        <span className="font-medium text-gray-700">Next Due:</span>
-                        <p className="text-gray-900">{vaccination.nextDue}</p>
+                        <span className="font-medium text-gray-700 dark:text-gray-300">Next Due:</span>
+                        <p className="text-gray-900 dark:text-white">{vaccination.nextDue}</p>
                       </div>
                     </div>
                   </div>
-                  <div className="flex gap-2">
-                    <Button variant="outline" size="sm">
-                      <Download className="w-4 h-4 mr-2" />
-                      Download Record
-                    </Button>
-                  </div>
+                </div>
+                <div className="flex gap-2">
+                  <Button variant="outline" size="sm" title="Download record">
+                    <Download className="w-4 h-4 mr-2" />
+                    Download Record
+                  </Button>
                 </div>
               </CardContent>
             </Card>
