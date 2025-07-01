@@ -54,18 +54,48 @@ const SymptomScanner = () => {
   const handleStartCamera = async () => {
     try {
       setCameraActive(true);
-      toast({
-        title: "Camera Activated",
-        description: "Position the affected area in the camera view",
-      });
-      
-      // Simulate camera access
-      setTimeout(() => {
+      setScanComplete(false);
+      setScanResult(null);
+      if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+        const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+        if (videoRef.current) {
+          (videoRef.current as HTMLVideoElement).srcObject = stream;
+        }
         toast({
-          title: "Camera Ready",
-          description: "Tap 'Scan Symptom' when ready to analyze",
+          title: "Camera Activated",
+          description: "Detecting symptoms...",
         });
-      }, 1000);
+        // Simulate automatic detection after 2 seconds
+        setTimeout(() => {
+          // 70% chance to detect a symptom, 30% chance to detect nothing
+          if (Math.random() < 0.7) {
+            const resultTypes = Object.keys(scanResults);
+            const randomResult = resultTypes[Math.floor(Math.random() * resultTypes.length)];
+            setScanResult(scanResults[randomResult]);
+            setScanComplete(true);
+            toast({
+              title: "Symptom Detected!",
+              description: `Possible: ${scanResults[randomResult].diagnosis}`,
+            });
+          } else {
+            setScanResult({
+              severity: "None",
+              confidence: 100,
+              diagnosis: "No symptom detected",
+              recommendation: "All good! No visible symptoms found.",
+              urgency: "none",
+              nextSteps: ["No action needed"]
+            });
+            setScanComplete(true);
+            toast({
+              title: "All Good!",
+              description: "No symptom detected.",
+            });
+          }
+        }, 2000);
+      } else {
+        throw new Error("Camera not supported");
+      }
     } catch (error) {
       toast({
         title: "Camera Error",
@@ -170,8 +200,9 @@ const SymptomScanner = () => {
             <div className="space-y-4">
               {/* Camera View */}
               <div className="relative w-full h-80 bg-gray-900 rounded-lg overflow-hidden">
-                {!cameraActive ? (
-                  <div className="absolute inset-0 flex items-center justify-center">
+                {/* Camera Not Active Overlay */}
+                {!cameraActive && (
+                  <div className="absolute inset-0 flex items-center justify-center z-10">
                     <div className="text-center text-white">
                       <Camera className="w-16 h-16 mx-auto mb-4 opacity-50" />
                       <p className="text-lg mb-4">Camera Not Active</p>
@@ -181,52 +212,50 @@ const SymptomScanner = () => {
                       </Button>
                     </div>
                   </div>
-                ) : (
-                  <div className="absolute inset-0 bg-gradient-to-br from-blue-900 to-purple-900">
-                    {/* Simulated camera feed */}
-                    <div className="absolute inset-0 opacity-30">
-                      <div className="w-full h-full bg-gradient-to-br from-green-400 to-blue-500"></div>
-                    </div>
-                    
-                    {/* Scanning overlay */}
-                    <div className="absolute inset-0 flex items-center justify-center">
-                      <div className="relative">
-                        {/* Scanning frame */}
-                        <div className="w-48 h-48 border-2 border-green-400 rounded-lg relative">
-                          {isScanning && (
-                            <div className="absolute inset-0">
-                              <div className="w-full h-1 bg-green-400 absolute top-0 animate-pulse"></div>
-                              <div className="w-1 h-full bg-green-400 absolute right-0 animate-pulse"></div>
-                              <div className="w-full h-1 bg-green-400 absolute bottom-0 animate-pulse"></div>
-                              <div className="w-1 h-full bg-green-400 absolute left-0 animate-pulse"></div>
-                            </div>
-                          )}
-                          
-                          {/* Corner markers */}
-                          <div className="absolute -top-2 -left-2 w-6 h-6 border-t-4 border-l-4 border-green-400"></div>
-                          <div className="absolute -top-2 -right-2 w-6 h-6 border-t-4 border-r-4 border-green-400"></div>
-                          <div className="absolute -bottom-2 -left-2 w-6 h-6 border-b-4 border-l-4 border-green-400"></div>
-                          <div className="absolute -bottom-2 -right-2 w-6 h-6 border-b-4 border-r-4 border-green-400"></div>
+                )}
+                {/* Video Feed */}
+                <video
+                  ref={videoRef}
+                  autoPlay
+                  playsInline
+                  className="absolute inset-0 w-full h-full object-cover"
+                  style={{ borderRadius: '0.5rem', display: cameraActive ? 'block' : 'none' }}
+                />
+                {/* Scanning Overlay */}
+                <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                  <div className="relative">
+                    {/* Scanning Frame */}
+                    <div className="w-48 h-48 border-2 border-green-400 rounded-lg relative">
+                      {isScanning && (
+                        <div className="absolute inset-0">
+                          <div className="w-full h-1 bg-green-400 absolute top-0 animate-pulse"></div>
+                          <div className="w-1 h-full bg-green-400 absolute right-0 animate-pulse"></div>
+                          <div className="w-full h-1 bg-green-400 absolute bottom-0 animate-pulse"></div>
+                          <div className="w-1 h-full bg-green-400 absolute left-0 animate-pulse"></div>
                         </div>
-                        
-                        {/* Instructions */}
-                        <div className="absolute -bottom-12 left-1/2 transform -translate-x-1/2 text-center text-white">
-                          <p className="text-sm">Position symptom within frame</p>
-                        </div>
-                      </div>
+                      )}
+                      {/* Corner markers */}
+                      <div className="absolute -top-2 -left-2 w-6 h-6 border-t-4 border-l-4 border-green-400"></div>
+                      <div className="absolute -top-2 -right-2 w-6 h-6 border-t-4 border-r-4 border-green-400"></div>
+                      <div className="absolute -bottom-2 -left-2 w-6 h-6 border-b-4 border-l-4 border-green-400"></div>
+                      <div className="absolute -bottom-2 -right-2 w-6 h-6 border-b-4 border-r-4 border-green-400"></div>
                     </div>
-
-                    {/* AI Status */}
-                    <div className="absolute top-4 left-4 bg-black bg-opacity-50 rounded-lg p-2 text-white">
-                      <div className="flex items-center space-x-2">
-                        <Brain className="w-4 h-4 text-green-400" />
-                        <span className="text-sm">AI Analysis Ready</span>
-                      </div>
+                    {/* Instructions */}
+                    <div className="absolute -bottom-12 left-1/2 transform -translate-x-1/2 text-center text-white">
+                      <p className="text-sm">Position symptom within frame</p>
+                    </div>
+                  </div>
+                </div>
+                {/* AI Status */}
+                {cameraActive && (
+                  <div className="absolute top-4 left-4 bg-black bg-opacity-50 rounded-lg p-2 text-white z-20">
+                    <div className="flex items-center space-x-2">
+                      <Brain className="w-4 h-4 text-green-400" />
+                      <span className="text-sm">AI Analysis Ready</span>
                     </div>
                   </div>
                 )}
               </div>
-
               {/* Scanning Progress */}
               {isScanning && (
                 <div className="space-y-2">
