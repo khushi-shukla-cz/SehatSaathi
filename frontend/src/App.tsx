@@ -19,7 +19,8 @@ import SymptomScanner from "./pages/SymptomScanner";
 import MindfulMinutes from "./pages/MindfulMinutes";
 import SymptomJournal from "./pages/SymptomJournal";
 import HabitsTracker from "./pages/HabitsTracker";
-import FirstAidQuiz from "./pages/FirstAidQuiz";
+import FirstAidGame from "./pages/FirstAidGame";
+
 import Layout from "./components/Layout";
 import ProtectedRoute from "./components/ProtectedRoute";
 import NotFound from "./pages/NotFound";
@@ -68,11 +69,12 @@ const App = () => (
                   <MindfulMinutes />
                 </ProtectedRoute>
               )} />
-              <Route path="first-aid-quiz" element={
+              <Route path="first-aid-game" element={
                 <ProtectedRoute>
-                  <FirstAidQuiz />
+                  <FirstAidGame />
                 </ProtectedRoute>
               } />
+              
             </Route>
             <Route path="*" element={<NotFound />} />
           </Routes>

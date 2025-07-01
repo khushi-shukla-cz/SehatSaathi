@@ -23,7 +23,8 @@ const Layout = () => {
     { name: 'Symptom Scanner', href: '/symptom-scanner', icon: Scan },
     { name: 'Mindful Minutes', href: '/mindful-minutes', icon: Clock },
     { name: 'Habits Tracker', href: '/habits-tracker', icon: Check },
-    { name: 'First Aid Quiz', href: '/first-aid-quiz', icon: HeartPulse },
+{ name: 'First Aid Game', href: '/first-aid-game', icon: HeartPulse },
+    
     { name: 'Profile', href: '/profile', icon: User },
   ];
 
